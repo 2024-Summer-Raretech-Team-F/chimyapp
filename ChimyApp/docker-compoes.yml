@@ -1,0 +1,51 @@
+services:
+  db:
+    container_name: MySQL
+    build:
+      context: .
+      dockerfile: db/Dockerfile
+    platform: linux/x86_64
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=chimyapp
+      - MYSQL_USER=testuser
+      - MYSQL_PASSWORD=testuser
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: go-api
+    volumes:
+      - ./backend:/api
+    ports:
+      - "8080:8080" 
+    tty: true
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:3000" 
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge

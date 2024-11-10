@@ -12,4 +12,4 @@ RUN go build -o main /app/main.go
 
 EXPOSE 8080
 
-CMD [/app/main]
+CMD ["/app/main"]
