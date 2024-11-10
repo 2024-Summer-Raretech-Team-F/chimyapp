@@ -1,5 +1,5 @@
 ## ディレクトリ構成
-project-root/
+ChimyApp/
 ├── backend/                   
 │   ├── cmd/                   
 │   │   └── main.go
