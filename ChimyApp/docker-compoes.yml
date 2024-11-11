@@ -2,9 +2,15 @@ services:
   db:
     container_name: MySQL
     build:
-      context: ./db
+      context: ./mysql
       dockerfile: Dockerfile
+    image: chimy-db:latest
+    tty: true  
     platform: linux/x86_64
+    ports:
+      - 3306:3306
+    env_file:
+      - ./mysql/.env
     volumes:
       - mysql_data:/var/lib/mysql
     environment:
@@ -21,27 +27,40 @@ services:
     
 
   backend:
+    container_name: go-api
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: go-api
     volumes:
       - ./backend:/api
     ports:
       - "8080:8080" 
     tty: true
+    env_file:
+      - ./mysql/.env 
+    depends_on:
+      - db  
+    networks:
+      - api_test_network
+
 
   frontend:
+    container_name: frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: frontend
     ports:
       - "3000:3000" 
     depends_on:
       - backend
     networks:
-      - app-network
+      - api_test_network
 
 volumes:
-  db_data:
+  mysql_test_volume:
+    name: mysql_test_volume
+
+
+networks:
+  api_test_network:
+    external: true

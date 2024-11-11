@@ -18,5 +18,6 @@ ChimyApp/
 ├── db/                        
 │   ├── postgres/              
 │   └── Dockerfile             
+├── .dockerignore
 ├── docker-compose.yml         
 └── README.md                  
