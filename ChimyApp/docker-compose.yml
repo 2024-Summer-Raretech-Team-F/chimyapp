@@ -8,9 +8,9 @@ services:
     tty: true  
     platform: linux/x86_64
     ports:
-      - 3306:3306
+      - 3307:3306
     env_file:
-      - ./mysql/.env
+      - ./Docker/MySQL/.env
     volumes:
       - mysql_data:/var/lib/mysql
     environment:
@@ -29,7 +29,7 @@ services:
   backend:
     container_name: go-api
     build:
-      context: ./backend
+      context: .
       dockerfile: Docker/Go/Dockerfile
     volumes:
       - ./backend:/api
@@ -40,27 +40,25 @@ services:
       - ./Docker/MySQL/.env 
     depends_on:
       - db  
-    networks:
-      - api_test_network
+    # networks:
+    #   - api_test_network
 
 
   frontend:
     container_name: frontend
     build:
-      context: ./frontend
+      context: .
       dockerfile: Docker/NextJS/Dockerfile
     ports:
       - "3000:3000" 
     depends_on:
       - backend
-    networks:
-      - api_test_network
+    # networks:
+    #   - api_test_network
 
 volumes:
-  mysql_test_volume:
-    name: mysql_test_volume
   mysql_data:
 
-networks:
-  api_test_network:
-    external: true
+# networks:
+#   api_test_network:
+#     external: true
