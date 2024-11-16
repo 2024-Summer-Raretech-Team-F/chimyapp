@@ -1,4 +1,4 @@
-module api/main.go
+module api
 
 go 1.23.2
 

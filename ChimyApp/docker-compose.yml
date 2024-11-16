@@ -32,7 +32,7 @@ services:
       context: .
       dockerfile: Docker/Go/Dockerfile
     volumes:
-      - ./backend:/api
+      - .:/api
     ports:
       - "8080:8080" 
     tty: true
