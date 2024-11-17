@@ -38,6 +38,7 @@ services:
     tty: true
     env_file:
       - ./Docker/MySQL/.env 
+    command: reflex - '\.go$$' -s -- sh -c 'go run cmd/main.go'  
     depends_on:
       - db  
     # networks:
