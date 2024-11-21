@@ -1,4 +1,5 @@
 FROM mysql:8.0
 
-COPY Docker/MySQL/my.cnf /etc/mysql/conf.d/my.cnf
+ENV LANG ja_JP.UTF-8
 
+COPY ./init /docker-entrypoint-initdb.d

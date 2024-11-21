@@ -1,6 +1,6 @@
 services:
   db:
-    container_name: MySQL
+    container_name: mysql
     build:
       context: .
       dockerfile: Docker/MySQL/Dockerfile
@@ -12,12 +12,14 @@ services:
     env_file:
       - ./Docker/MySQL/.env
     volumes:
-      - mysql_data:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=chimyapp
-      - MYSQL_USER=testuser
-      - MYSQL_PASSWORD=testuser
+      - type: volume
+        source: mysql_data
+        target: /var/lib/mysql
+      
+      - type: bind
+        source: ./init
+        target: /docker-entrypoint-initdb.d  
+
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD
       interval: 10s
@@ -32,13 +34,13 @@ services:
       context: .
       dockerfile: Docker/Go/Dockerfile
     volumes:
-      - .:/api
+      - ./api:/api
     ports:
       - "8080:8080" 
     tty: true
     env_file:
       - ./Docker/MySQL/.env 
-    command: reflex - '\.go$$' -s -- sh -c 'go run cmd/main.go'  
+    # command: reflex - '\.go$$' -s -- sh -c 'go run cmd/main.go'  
     depends_on:
       - db  
     # networks:
